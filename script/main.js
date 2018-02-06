@@ -6,6 +6,7 @@ function addNewEdit(newListEl, newElement){
     var newEdit = document.createElement('img')
     var apply = document.createElement('img')
     newEdit.setAttribute('src', 'images/edit.svg')
+    newEdit.classList.add('edit')
     newListEl.appendChild(newEdit)
     apply.setAttribute('src', 'images/correct.svg')
     apply.classList.add('apply')
@@ -76,21 +77,14 @@ function main() {
 function createTask (newTaskName) {
     var newElement = new createNewTask(newTaskName)
     // creating input el. to editing task //
-    var newInput = document.createElement('input')
-    // event listener to prevent correct task while clicking on input //
-    newInput.addEventListener('click', function(e){
-        e.stopPropagation()
-    })
-    newInput.setAttribute('type', 'text')
-    newInput.setAttribute('placeholder', newElement.newTask);
-    newInput.classList.add('newInput')
-    newInput.classList.add('hidden')
+   
+    //newInput.classList.add('hidden')
     var taskList = document.querySelector('.taskContent')
     var newLi = document.createElement('li')
     var p = document.createElement('p')
     p.textContent = newElement.newTask
     newLi.appendChild(p)
-    newLi.appendChild(newInput)
+    //newLi.appendChild(newInput)
     addNewDelete(newLi)
     addNewEdit(newLi, newElement)
     taskList.appendChild(newLi)
@@ -99,12 +93,39 @@ function createTask (newTaskName) {
     })
 }
 
-function editTask(e, newElement) {
+/*function editTask(e, newElement) {
     e.target.previousSibling.previousSibling.classList.remove('hidden')
     e.target.previousSibling.previousSibling.focus()
     e.target.parentElement.firstChild.classList.add('hidden')
     e.target.classList.toggle('hidden')
     e.target.nextSibling.classList.toggle('hidden')
+}*/
+
+function editTask(e, newElement){
+    var newInput = document.createElement('input')
+    newInput.setAttribute('type', 'text')
+    newInput.setAttribute('placeholder', newElement.newTask);
+    newInput.classList.add('newInput')
+    var thisLi = e.target.parentElement
+    var thisP = e.target.parentElement.querySelector('p').classList.add('hidden')
+    thisLi.insertBefore(newInput, thisP)
+    newInput.focus()
+    thisLi.querySelector('.apply').classList.remove('hidden')
+    e.target.classList.add('hidden')
+    newInput.addEventListener('click', function(ev){
+        ev.stopPropagation()
+    })
+}
+
+function applyChanges (e, newElement) {
+    var thisEl = e.target.parentElement
+    var thisElInput = thisEl.querySelector('.newInput')
+    newElement = thisElInput.value
+    thisEl.firstChild.textContent = newElement
+    thisEl.removeChild(thisElInput)
+    thisEl.firstChild.classList.remove('hidden')
+    e.target.classList.toggle('hidden')
+    thisEl.querySelector('.edit').classList.remove('hidden')
 }
 
 function isEmpty (){
@@ -114,16 +135,6 @@ function isEmpty (){
         taskCounter = document.querySelector('ul')
         taskCounter.textContent = "List is empty..."
     }
-}
-
-function applyChanges (e, newElement) {
-    var thisEl = e.target
-    newElement = thisEl.parentElement.firstChild.nextSibling.value
-    thisEl.parentElement.firstChild.textContent = newElement
-    thisEl.parentElement.firstChild.nextSibling.classList.toggle('hidden')
-    thisEl.parentElement.firstChild.classList.toggle('hidden')
-    thisEl.classList.toggle('hidden')
-    thisEl.previousSibling.classList.toggle('hidden')
 }
 
 function setStorage () {
