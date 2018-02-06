@@ -107,13 +107,13 @@ function editTask(e, newElement){
     newInput.setAttribute('placeholder', newElement.newTask);
     newInput.classList.add('newInput')
     var thisLi = e.target.parentElement
-    var thisP = e.target.parentElement.querySelector('p').classList.add('hidden')
+    var thisP = thisLi.querySelector('p').classList.add('hidden')
     thisLi.insertBefore(newInput, thisP)
     newInput.focus()
     thisLi.querySelector('.apply').classList.remove('hidden')
     e.target.classList.add('hidden')
-    newInput.addEventListener('click', function(ev){
-        ev.stopPropagation()
+    newInput.addEventListener('click', function(event){
+        event.stopPropagation()
     })
 }
 
